@@ -22,7 +22,7 @@ class CVManager:
         for image_data, image_name in images:
             cv2.imwrite(f'{path}/{image_name}.png', image_data)
 
-    def fitImage(self, image, canvas_size, background_image=None, gap=(0,0)):
+       def fitImage(self, image, canvas_size, background_image=None, gap=(0,0)):
         """ Resize and position the given image to fit within the canvas size."""
         if background_image is None:
             background_image = np.full((canvas_size.height(), canvas_size.width(), 3), (255, 255, 255), dtype=np.uint8)
@@ -30,7 +30,10 @@ class CVManager:
         # Adjust image dimensions to fit within the canvas size
         image_x = canvas_size.width() if  image_x > canvas_size.width() else image_x
         image_y = canvas_size.height() if image_y > canvas_size.height() else image_y
-        image = cv2.resize(image, (image_x - gap[0], image_y - gap[1]))
+        image_x = image_x - gap[0] if image_x - gap[0] > 0 else image_x
+        image_y = image_y - gap[1] if image_y -gap[1] > 0 else image_y
+
+        image = cv2.resize(image, (image_x, image_y))
         # Position the image in the center of the canvas
         y = (canvas_size.height() - image.shape[0]) // 2
         x = (canvas_size.width() - image.shape[1]) // 2
